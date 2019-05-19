@@ -83,16 +83,8 @@ function submitIngredients() {
     })
 }
 
-function xmlTest() {
-    let xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.open('GET', "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=5&ranking=1&ignorePantry=false&ingredients=apples%2Ccheese%2Cwine%2Ccumin");
-}
-
 $(function startPage() {
     addIngredient();
     deleteIngredient();
     submitIngredients();
-    xmlTest();
 })
