@@ -14,9 +14,17 @@
     </header>
     <main>
         <section class="ingredients">
-            <form>
-                <input type="text" required>
+            <form class="add-ingredient">
+                <input id="ingredient-input" type="text" placeholder="cheese" required>
+                <input type="submit" value="add">
             </form>
+            <ul class="ingredient-list"></ul>
+            <button class="find-recipe">I'm Hungry</button>
+        </section>
+        <section class="recipes">
+            <div class="recipe-carousel">
+                
+            </div>
         </section>
     </main>
     <script src="main.js"></script>
