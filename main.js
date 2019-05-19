@@ -74,10 +74,8 @@ function callEdamamApi() {
         alert("You have no ingredients") 
     } else {
         fetch(url)
-        .then(response => {
-            return response.json()})
-        .then(responseJson => 
-            displayRecipes(responseJson))
+        .then(response => response.json())
+        .then(responseJson => displayRecipes(responseJson))
         .catch(err => $('.error-message').html("uh oh, " + err))  
     }
 }
@@ -97,16 +95,55 @@ function convertRecipeJson(responseJson) {
             proteins: dish.recipe.totalNutrients.PROCNT,
             fats: dish.recipe.totalNutrients.FAT
         },
-        healthTags: dish.recipe.healthLabels + dish.recipe.dietLabels,
+        healthTags: dish.recipe.healthLabels.concat(dish.recipe.dietLabels),
     }));
-    console.log(recipeList);
 }
 
 function displayRecipes(responseJson) {
-    convertRecipeJson();
-    recipeList.forEach(recipe => {
-        $('recipe-carousel').
+    const ingredientListCopy = [...ingredientList];
+    convertRecipeJson(responseJson);
+    //should i split this up?
+    recipeList.forEach((recipe, index) => {
+        console.log(recipe, index);
+        console.log(recipe.ingredients)
+        console.log(typeof recipe.healthTags)
+        $('.recipe-carousel').append(
+            `<div class="recipe-card" id="recipe-${index}">
+                <img src="${recipe.image}" alt="picture of ${recipe.name}">
+                <h2>${recipe.name}</h2>
+                <div class="nutrition" id="nutrition-${index}">
+                    <table>
+                        <tr>
+                            <td>Calories</td>
+                            <td>${recipe.calories}</td>
+                        </tr>
+                        <tr>
+                            <td>Carbs</td>
+                            <td>${recipe.macros.carbs.quantity} ${recipe.macros.carbs.unit}</td>
+                        </tr>
+                        <tr>
+                            <td>Proteins</td>
+                            <td>${recipe.macros.proteins.quantity} ${recipe.macros.proteins.unit}</td>
+                        </tr>
+                            <td>Fats</td>
+                            <td>${recipe.macros.fats.quantity} ${recipe.macros.fats.unit}</td>
+                        </tr>
+                    </table>
+                    <div class="ingredients">
+                        <h2>Ingredients</h2>
+                        <ul class="ingredients-list" id="ingredients-list-${index}">
+                        </ul>
+                    </div>
+                    <div class="health-tags" id="health-tag-${index}"></div>
+                </div>
+                <button><a href="${recipe.link}" target="_blank">Make it</a></button>
+                <button>I don't feel like cooking today</button>
+            </div>`
+        );
+        recipe.healthTags.forEach(tag => $(`#health-tag-${index}`).append(`<span class="health-tags">${tag}</span>`));
+        recipe.ingredients.forEach(ingredient => $(`#ingredients-list-${index}`).append(`<li>${ingredient.text}</li>`))
     })
+    ingredientListCopy.forEach(item => $(`.ingredients-list li:contains('${item}')`).css("color","red"))
 }
 
 function submitIngredients() {
