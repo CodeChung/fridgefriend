@@ -1,11 +1,11 @@
 // function test() {
 //     let url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/findByIngredients?number=5&ranking=1&ignorePantry=false&ingredients=apples%2Ccheese%2Cwine%2Ccumin"
-//     const options = {
-//         headers: {
-//             "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
-//             "X-RapidAPI-Key": "17f5c1d57emsh9c38ba28668b1a1p103a40jsn5763af6646d2"
-//         },
-//     };
+    // const options = {
+    //     headers: {
+    //         "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
+    //         "X-RapidAPI-Key": "17f5c1d57emsh9c38ba28668b1a1p103a40jsn5763af6646d2"
+    //     },
+    // };
     // fetch(url, options)
     //     .then(response => {
     //         console.log(response.headers)
@@ -23,6 +23,11 @@ let recipeList = [];
 const edamamUrl = "https://api.edamam.com/search?";
 const edamamId = "12b959ba";
 const edamamApiKey = "0ff0b20b2cc4c31867eb4788a361d8d2";
+let yelpTerm;
+const yelpUrl = "https://api.yelp.com/v3/businesses/search?";
+const yelpApiKey = "soNW-o3-baTPeVEaQm1_KKKttFXJLIpraKQ3CL15uyIm7gGPc1YZ2_clGYD_7r4HDk1Khm4x4TcUcYhemrqdJtzloS-YOZ0Sb6iCweygtYSpnufcZjSF-QbRdubhXHYx"
+
+
 
 function addIngredient() {
     $('form.add-ingredient').submit(event => {
@@ -45,7 +50,9 @@ function displayIngredients() {
 
 function deleteIngredient() {
     $('.ingredient-list').on('click', '.ingredient-button', event => {
-        console.log($(this).parent().attr("id"));
+        const ingredientId = event.target.getAttribute("id");
+        $(`#${ingredientId}`).remove();
+        ingredientList.pop(`${ingredientId}`);
     })
 }
 
@@ -91,9 +98,9 @@ function convertRecipeJson(responseJson) {
         calories: dish.recipe.calories,
         image: dish.recipe.image,
         macros: {
-            carbs: dish.recipe.totalNutrients.CHOCDF,
-            proteins: dish.recipe.totalNutrients.PROCNT,
-            fats: dish.recipe.totalNutrients.FAT
+            carbs: dish.recipe.totalNutrients.CHOCDF || 'N/A',
+            proteins: dish.recipe.totalNutrients.PROCNT || 'N/A',
+            fats: dish.recipe.totalNutrients.FAT || 'N/A',
         },
         healthTags: dish.recipe.healthLabels.concat(dish.recipe.dietLabels),
     }));
@@ -137,13 +144,13 @@ function displayRecipes(responseJson) {
                     <div class="health-tags" id="health-tag-${index}"></div>
                 </div>
                 <button><a href="${recipe.link}" target="_blank">Make it</a></button>
-                <button>I don't feel like cooking today</button>
+                <button class="find-restaurant">I don't feel like cooking today</button>
             </div>`
         );
         recipe.healthTags.forEach(tag => $(`#health-tag-${index}`).append(`<span class="health-tags">${tag}</span>`));
         recipe.ingredients.forEach(ingredient => $(`#ingredients-list-${index}`).append(`<li>${ingredient.text}</li>`))
     })
-    ingredientListCopy.forEach(item => $(`.ingredients-list li:contains('${item}')`).css("color","red"))
+    ingredientListCopy.forEach(item => $(`.ingredients-list li:contains('${item}')`).addClass("already-have"));
 }
 
 function submitIngredients() {
@@ -152,8 +159,62 @@ function submitIngredients() {
     })
 }
 
+function stripRecipe(recipeName) {
+    return recipeName.split(" ").filter(word => word.toLowerCase() !== "recipe" && word.toLowerCase() !== "recipes").join(" ");
+}
+
+function callYelpApi() {
+    $('form.get-zip').submit(event => {
+        event.preventDefault();
+        const zip = $('#zipcode').val();
+        console.log(zip);
+        const options = {
+            headers: {
+                "Authorization": `Bearer ${yelpApiKey}`,
+            },
+        };
+        const yelpQueryItems = yelpTerm.trim().replace(" ", "+");
+        const queryParams = {
+            term: yelpQueryItems,
+            location: zip
+        }
+        
+        const yelpParams = paramsFormatted(queryParams)
+        const url = yelpUrl + yelpParams;
+        fetch(url, options)
+            .then(response => {
+                console.log(response);
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("oopsies api call failed");
+                }
+            })
+            .then(responseJson => displayRestaurants(responseJson))
+            .catch(err => $('.error-message').html("uh oh, " + err));
+    })
+}
+
+function revealRestaurantSection() {
+    $('.recipe-carousel').on('click', '.find-restaurant', event => {
+        const recipeName = $(event.target).siblings("h2").text();
+        yelpTerm = stripRecipe(recipeName);
+        $('.restaurants').removeClass('hidden');
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $(".restaurants").offset().top
+        }, 2000);
+    })
+}
+
+
+function findRestaurants() {
+    callYelpApi();
+}
+
 $(function startPage() {
     addIngredient();
     deleteIngredient();
     submitIngredients();
+    revealRestaurantSection();
+    findRestaurants();
 })
