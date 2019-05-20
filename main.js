@@ -18,16 +18,15 @@
 
 "use strict";
 
-const ingredientList = [];
+let ingredientList = [];
 let recipeList = [];
 const edamamUrl = "https://api.edamam.com/search?";
-const edamamId = "12b959ba";
-const edamamApiKey = "0ff0b20b2cc4c31867eb4788a361d8d2";
-let yelpTerm;
-const yelpUrl = "https://api.yelp.com/v3/businesses/search?";
-const yelpApiKey = "soNW-o3-baTPeVEaQm1_KKKttFXJLIpraKQ3CL15uyIm7gGPc1YZ2_clGYD_7r4HDk1Khm4x4TcUcYhemrqdJtzloS-YOZ0Sb6iCweygtYSpnufcZjSF-QbRdubhXHYx"
-
-
+// const edamamId = "12b959ba";
+// const edamamApiKey = "0ff0b20b2cc4c31867eb4788a361d8d2";
+const edamamId = "e1a9af3e";
+const edamamApiKey = "893c9d58fe845be145348f72c95bd5d9";
+const youtubeUrl = "https://www.googleapis.com/youtube/v3/search?";
+const youtubeApiKey = "AIzaSyCGR7I6ui7MVs7YuSXq7bDvxK3IJAZ6qtA";
 
 function addIngredient() {
     $('form.add-ingredient').submit(event => {
@@ -52,7 +51,7 @@ function deleteIngredient() {
     $('.ingredient-list').on('click', '.ingredient-button', event => {
         const ingredientId = event.target.getAttribute("id");
         $(`#${ingredientId}`).remove();
-        ingredientList.pop(`${ingredientId}`);
+        ingredientList = ingredientList.filter(item => item !== ingredientId);
     })
 }
 
@@ -110,10 +109,10 @@ function displayRecipes(responseJson) {
     const ingredientListCopy = [...ingredientList];
     convertRecipeJson(responseJson);
     //should i split this up?
+    if (recipeList.length === 0) {
+        $('.recipe-carousel').append("<h2>Uhoh spaghetti-o's no results found. Try a differnt combination or try less ingredients</h2>")
+    }
     recipeList.forEach((recipe, index) => {
-        console.log(recipe, index);
-        console.log(recipe.ingredients)
-        console.log(typeof recipe.healthTags)
         $('.recipe-carousel').append(
             `<div class="recipe-card" id="recipe-${index}">
                 <img src="${recipe.image}" alt="picture of ${recipe.name}">
@@ -144,7 +143,7 @@ function displayRecipes(responseJson) {
                     <div class="health-tags" id="health-tag-${index}"></div>
                 </div>
                 <button><a href="${recipe.link}" target="_blank">Make it</a></button>
-                <button class="find-restaurant">I don't feel like cooking today</button>
+                <button class="find-videos">Watch and Learn</button>
             </div>`
         );
         recipe.healthTags.forEach(tag => $(`#health-tag-${index}`).append(`<span class="health-tags">${tag}</span>`));
@@ -155,66 +154,65 @@ function displayRecipes(responseJson) {
 
 function submitIngredients() {
     $('button.find-recipe').click(event => {
+        $('.recipe-carousel').empty();
         callEdamamApi();
     })
 }
 
-function stripRecipe(recipeName) {
-    return recipeName.split(" ").filter(word => word.toLowerCase() !== "recipe" && word.toLowerCase() !== "recipes").join(" ");
+function recipeFormatted(recipeName) {
+    return recipeName.split(" ").join("%20");
 }
 
-function callYelpApi() {
-    $('form.get-zip').submit(event => {
-        event.preventDefault();
-        const zip = $('#zipcode').val();
-        console.log(zip);
-        const options = {
-            headers: {
-                "Authorization": `Bearer ${yelpApiKey}`,
-            },
-        };
-        const yelpQueryItems = yelpTerm.trim().replace(" ", "+");
-        const queryParams = {
-            term: yelpQueryItems,
-            location: zip
-        }
-        
-        const yelpParams = paramsFormatted(queryParams)
-        const url = yelpUrl + yelpParams;
-        fetch(url, options)
-            .then(response => {
-                console.log(response);
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("oopsies api call failed");
-                }
-            })
-            .then(responseJson => displayRestaurants(responseJson))
-            .catch(err => $('.error-message').html("uh oh, " + err));
+function convertYoutubeObject(youtubeJson) {
+    const videoListJson = youtubeJson.items;
+    const videoList = videoListJson.map(video => ({
+        link: "https://www.youtube.com/watch?v=" + video.id.videoId,
+        thumbnail: video.snippet.thumbnails.high.url,
+        title: video.snippet.title,
+        description: video.snippet.description
+    }))
+    return videoList;
+}
+
+function displayVideos(youtubeJson) {
+    const videos = convertYoutubeObject(youtubeJson);
+    videos.forEach(video => {
+        $('.video-carousel').append(`
+            <div class="video">
+                <h3>${video.title}</h3>
+                <a href="${video.link}" target="_blank"><img src="${video.thumbnail}" alt="video thumbnail"></a>
+                <p><b>Description: </b>${video.description}</p>
+            </div>
+        `)
     })
 }
 
-function revealRestaurantSection() {
-    $('.recipe-carousel').on('click', '.find-restaurant', event => {
-        const recipeName = $(event.target).siblings("h2").text();
-        yelpTerm = stripRecipe(recipeName);
-        $('.restaurants').removeClass('hidden');
+function callYoutubeApi(recipeName) {
+    $('.video-carousel').empty();
+    const recipeQuery = recipeFormatted(recipeName);
+    const youtubeParams = `part=snippet&maxResults=10&q=${recipeQuery}&key=${youtubeApiKey}`;
+    const searchUrl = youtubeUrl + youtubeParams;
+    console.log(searchUrl);
+    fetch(searchUrl)
+        .then(response => response.json())
+        .then(responseJson => displayVideos(responseJson))
+        .catch(err => alert(err));
+}
+
+function revealVideoSection() {
+    $('.recipe-carousel').on('click', '.find-videos', event => {
+        const recipeName = ($(event.target).siblings("h2").text() + " recipe");
+        callYoutubeApi(recipeName);
+        $('.videos').removeClass('hidden');
         $([document.documentElement, document.body]).animate({
-            scrollTop: $(".restaurants").offset().top
+            scrollTop: $(".videos").offset().top
         }, 2000);
     })
-}
-
-
-function findRestaurants() {
-    callYelpApi();
 }
 
 $(function startPage() {
     addIngredient();
     deleteIngredient();
     submitIngredients();
-    revealRestaurantSection();
-    findRestaurants();
+    revealVideoSection();
 })

@@ -18,3 +18,17 @@
 .hidden {
     display: none;
 }
+
+.video-carousel {
+    display: flex;
+}
+
+.video {
+    border: 1px solid black;
+    width: 480px;
+    margin: 10px;
+}
+
+.video a {
+    width: 100%;
+}
