@@ -210,39 +210,39 @@ function revealVideoSection() {
     })
 }
 
-function watson() {
-    const url = "https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?text=hey it's me, your fridge. add some ingredients to the list and let's get cookin";
-    fetch(url, {
-        headers: {
-            'Authorization': 'Basic ' + btoa("apikey" + ":" + "fW2fngJ-19rBjNUds3YwYlNR9W4ROAt3-uM9Q_79q4P_")
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.url;
-        } else {
-            throw new Error("refrigerator not running");
-        }
-    })
-    .then(audioUrl => {
-        $('header').append(`
-        <audio controls autoplay id="welcome" class="hidden">
-            <source src="${audioUrl}" type="audio/ogg">
-            Your browser does not support the audio element.
-        </audio>
-        `)
-    })
-    .then(function() {
-        $("audio").trigger("play");
-    })
-    .catch(err => alert(err))
+// function watson() {
+//     const url = "https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?text=hey it's me, your fridge. add some ingredients to the list and let's get cookin";
+//     fetch(url, {
+//         headers: {
+//             'Authorization': 'Basic ' + btoa("apikey" + ":" + "fW2fngJ-19rBjNUds3YwYlNR9W4ROAt3-uM9Q_79q4P_")
+//         }
+//     })
+//     .then(response => {
+//         if (response.ok) {
+//             return response.url;
+//         } else {
+//             throw new Error("refrigerator not running");
+//         }
+//     })
+//     .then(audioUrl => {
+//         $('header').append(`
+//         <audio controls autoplay id="welcome" class="hidden">
+//             <source src="${audioUrl}" type="audio/ogg">
+//             Your browser does not support the audio element.
+//         </audio>
+//         `)
+//     })
+//     .then(function() {
+//         $("audio").trigger("play");
+//     })
+//     .catch(err => alert(err))
     
-}
+// }
 
 $(function startPage() {
     addIngredient();
     deleteIngredient();
     submitIngredients();
     revealVideoSection();
-    watson();
+    // watson();
 })
