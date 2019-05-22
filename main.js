@@ -130,41 +130,49 @@ function displayRecipes(responseJson) {
                     <button class="tablinks-${index}" onclick="openTab(event, '${index}-tab-3', '${index}')">Cook</button>
                 </div>
                 <div id="${index}-tab-1" class="tab-content-${index}">
-                    <img src="${recipe.image}" alt="picture of ${recipe.name}">
-                    <h2>${recipe.name}</h2>
+                    <div class="food-pic">
+                        <h2>${recipe.name}</h2>
+                        <img src="${recipe.image}" alt="picture of ${recipe.name}">
+                    </div>
                 </div>
                 <div id="${index}-tab-2" class="tab-content-${index} hidden">
-                    <table>
-                        <tr>
-                            <td>Calories:</td>
-                            <td>${recipe.calories}</td>
-                        </tr>
-                        <tr>
-                            <td>Carbs:</td>
-                            <td>${Math.floor(recipe.macros.carbs.quantity)} ${recipe.macros.carbs.unit}</td>
-                        </tr>
-                        <tr>
-                            <td>Proteins:</td>
-                            <td>${Math.floor(recipe.macros.proteins.quantity)} ${recipe.macros.proteins.unit}</td>
-                        </tr>
-                            <td>Fats:</td>
-                            <td>${Math.floor(recipe.macros.fats.quantity)} ${recipe.macros.fats.unit}</td>
-                        </tr>
-                    </table>
-                    <div class="health-tags" id="health-tag-${index}"></div>
+                    <div class="nutrition">
+                        <h2>${recipe.name}</h2>
+                        <table>
+                            <tr>
+                                <td>Calories:</td>
+                                <td>${recipe.calories}</td>
+                            </tr>
+                            <tr>
+                                <td>Carbs:</td>
+                                <td>${Math.floor(recipe.macros.carbs.quantity)} ${recipe.macros.carbs.unit}</td>
+                            </tr>
+                            <tr>
+                                <td>Proteins:</td>
+                                <td>${Math.floor(recipe.macros.proteins.quantity)} ${recipe.macros.proteins.unit}</td>
+                            </tr>
+                                <td>Fats:</td>
+                                <td>${Math.floor(recipe.macros.fats.quantity)} ${recipe.macros.fats.unit}</td>
+                            </tr>
+                        </table>
+                        <div class="health-tag" id="health-tag-${index}"></div>
+                    </div>
                 </div>
                 <div id="${index}-tab-3" class="tab-content-${index} hidden">
-                    <div class="ingredients">
-                        <h2>Ingredients</h2>
-                        <ul class="ingredients-list" id="ingredients-list-${index}">
-                        </ul>
+                    <div class="cooking">
+                        <h2>${recipe.name}</h2>
+                        <div class="recipe-ingredients">
+                            <h3>Ingredients</h3>
+                            <ul class="ingredients-list" id="ingredients-list-${index}">
+                            </ul>
+                            <button><a href="${recipe.link}" target="_blank">Recipe</a></button>
+                            <button class="find-videos">Watch & Learn</button>
+                        </div>
                     </div>
-                    <button><a href="${recipe.link}" target="_blank">Recipe</a></button>
-                    <button class="find-videos">Watch and Learn</button>
                 </div>
             </div>`
         );
-        recipe.healthTags.forEach(tag => $(`#health-tag-${index}`).append(`<span class="health-tags">${tag}</span>`));
+        recipe.healthTags.forEach(tag => $(`#health-tag-${index}`).append(`<div class="health-tags">${tag}</div>`));
         recipe.ingredients.forEach(ingredient => $(`#ingredients-list-${index}`).append(`<li>${ingredient.text}</li>`))
     })
     ingredientListCopy.forEach(item => $(`.ingredients-list li:contains('${item}')`).addClass("already-have"));
@@ -235,7 +243,9 @@ function callYoutubeApi(recipeName) {
 
 function revealVideoSection() {
     $('.recipe-carousel').on('click', '.find-videos', event => {
-        const recipeName = ($(event.target).siblings("h2").text() + " recipe");
+        console.log(event.target)
+        const recipeName = ($(event.target).parent().siblings("h2").text() + " recipe");
+        console.log(recipeName);
         callYoutubeApi(recipeName);
         $('.videos').removeClass('hidden');
         $([document.documentElement, document.body]).animate({
