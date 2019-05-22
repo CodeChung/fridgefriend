@@ -155,6 +155,8 @@ function displayRecipes(responseJson) {
 function submitIngredients() {
     $('button.find-recipe').click(event => {
         $('.recipe-carousel').empty();
+        $('.video-carousel').empty();
+        $('.videos').addClass('hidden')
         callEdamamApi();
     })
 }
