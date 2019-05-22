@@ -5,7 +5,9 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Fridge Friend</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='normalize.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 </head>
 <body>
@@ -15,16 +17,21 @@
             <source src="src/audio/greeting.ogg" type="audio/ogg">
             Your browser does not support the audio element.
         </audio>
-    </header>
-    <main>
         <section class="ingredients">
             <form class="add-ingredient">
                 <input id="ingredient-input" type="text" placeholder="cheese" required>
                 <input type="submit" value="add">
             </form>
+            <div class="lines">
+                <div class="bar" id="bar-1"></div>
+                <div class="bar" id="bar-2"></div>
+            </div>
             <ul class="ingredient-list"></ul>
-            <button class="find-recipe">I'm Hungry</button>
         </section>
+        <button class="find-recipe">I'm Hungry</button>
+    </header>
+    <main>
+        <section class="directions">onioafsd</section>
         <section class="recipes">
             <div class="error-message"></div>
             <div class="recipe-carousel"></div>

@@ -31,10 +31,14 @@ const youtubeApiKey = "AIzaSyCGR7I6ui7MVs7YuSXq7bDvxK3IJAZ6qtA";
 function addIngredient() {
     $('form.add-ingredient').submit(event => {
         event.preventDefault();
-        const ingredient = $("#ingredient-input").val();
-        ingredientList.push(ingredient)
-        $("#ingredient-input").val("");
-        displayIngredients();
+        // if ($('.ingredient-list li').length > 10) {
+        //     console.log("Refrigerator is FULL")
+        // } else {
+            const ingredient = $("#ingredient-input").val();
+            ingredientList.push(ingredient)
+            $("#ingredient-input").val("");
+            displayIngredients();
+        // }
     })
 }
 
@@ -42,7 +46,7 @@ function displayIngredients() {
     $('.ingredient-list').empty();
     ingredientList.forEach(ingredient => {
         $('.ingredient-list').append(`
-        <li id="${ingredient}">${ingredient} <button class="ingredient-button" id="${ingredient}">delete</button></li>
+        <li id="${ingredient}">${ingredient} <button class="ingredient-button" id="${ingredient}">X</button></li>
         `);
     })
 }
@@ -86,15 +90,20 @@ function callEdamamApi() {
     }
 }
 
+function stripQuotes(string) {
+    return string.split(" ").filter(word => word !== "'" && word !== '"').join(" ");
+}
+
 function convertRecipeJson(responseJson) {
     $('.error-message').empty();
     recipeList = [];
     const recipes = responseJson["hits"];
     recipes.forEach(dish => recipeList.push({
         name: dish.recipe.label,
+        label: stripQuotes(dish.recipe.label),
         link: dish.recipe.url,
         ingredients: dish.recipe.ingredients,
-        calories: dish.recipe.calories,
+        calories: Math.floor(dish.recipe.calories),
         image: dish.recipe.image,
         macros: {
             carbs: dish.recipe.totalNutrients.CHOCDF || 'N/A',
@@ -115,41 +124,64 @@ function displayRecipes(responseJson) {
     recipeList.forEach((recipe, index) => {
         $('.recipe-carousel').append(
             `<div class="recipe-card" id="recipe-${index}">
-                <img src="${recipe.image}" alt="picture of ${recipe.name}">
-                <h2>${recipe.name}</h2>
-                <div class="nutrition" id="nutrition-${index}">
+                <div class="tab">
+                    <button class="tablinks-${index}" onclick="openTab(event, '${index}-tab-1', '${index}')">Dish</button>
+                    <button class="tablinks-${index}" onclick="openTab(event, '${index}-tab-2', '${index}')">Nutrition</button>
+                    <button class="tablinks-${index}" onclick="openTab(event, '${index}-tab-3', '${index}')">Cook</button>
+                </div>
+                <div id="${index}-tab-1" class="tab-content-${index}">
+                    <img src="${recipe.image}" alt="picture of ${recipe.name}">
+                    <h2>${recipe.name}</h2>
+                </div>
+                <div id="${index}-tab-2" class="tab-content-${index} hidden">
                     <table>
                         <tr>
-                            <td>Calories</td>
+                            <td>Calories:</td>
                             <td>${recipe.calories}</td>
                         </tr>
                         <tr>
-                            <td>Carbs</td>
-                            <td>${recipe.macros.carbs.quantity} ${recipe.macros.carbs.unit}</td>
+                            <td>Carbs:</td>
+                            <td>${Math.floor(recipe.macros.carbs.quantity)} ${recipe.macros.carbs.unit}</td>
                         </tr>
                         <tr>
-                            <td>Proteins</td>
-                            <td>${recipe.macros.proteins.quantity} ${recipe.macros.proteins.unit}</td>
+                            <td>Proteins:</td>
+                            <td>${Math.floor(recipe.macros.proteins.quantity)} ${recipe.macros.proteins.unit}</td>
                         </tr>
-                            <td>Fats</td>
-                            <td>${recipe.macros.fats.quantity} ${recipe.macros.fats.unit}</td>
+                            <td>Fats:</td>
+                            <td>${Math.floor(recipe.macros.fats.quantity)} ${recipe.macros.fats.unit}</td>
                         </tr>
                     </table>
+                    <div class="health-tags" id="health-tag-${index}"></div>
+                </div>
+                <div id="${index}-tab-3" class="tab-content-${index} hidden">
                     <div class="ingredients">
                         <h2>Ingredients</h2>
                         <ul class="ingredients-list" id="ingredients-list-${index}">
                         </ul>
                     </div>
-                    <div class="health-tags" id="health-tag-${index}"></div>
+                    <button><a href="${recipe.link}" target="_blank">Recipe</a></button>
+                    <button class="find-videos">Watch and Learn</button>
                 </div>
-                <button><a href="${recipe.link}" target="_blank">Make it</a></button>
-                <button class="find-videos">Watch and Learn</button>
             </div>`
         );
         recipe.healthTags.forEach(tag => $(`#health-tag-${index}`).append(`<span class="health-tags">${tag}</span>`));
         recipe.ingredients.forEach(ingredient => $(`#ingredients-list-${index}`).append(`<li>${ingredient.text}</li>`))
     })
     ingredientListCopy.forEach(item => $(`.ingredients-list li:contains('${item}')`).addClass("already-have"));
+}
+
+function openTab(event, recipeTab, recipeIndex) {
+    let tabContent, tabLinks;
+    tabContent = document.getElementsByClassName(`tab-content-${recipeIndex}`);
+    for (let i = 0; i < tabContent.length; i++) {
+        tabContent[i].style.display = "none";
+    }
+    tabLinks = document.getElementsByClassName(`tablinks-${recipeIndex}`);
+    for (let i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].className = tabLinks[i].className.replace("active", "");
+    }
+    document.getElementById(recipeTab).style.display = "block";
+    event.currentTarget.className += "active";
 }
 
 function submitIngredients() {
