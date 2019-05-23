@@ -12,7 +12,7 @@ header {
     border: 20px solid black;
     border-radius: 20px;
     width: 30%;
-    margin: 20px auto;
+    margin: 20px auto 10vh;
     height: 90vh;
     display: flex;
     flex-direction: column;
@@ -118,7 +118,7 @@ input[type="submit"] {
 }
 
 .tab button.active {
-    background-color: #ccc;
+    background-color: rgba(221, 221, 221, 0.781);
 }
 
 
@@ -129,15 +129,13 @@ input[type="submit"] {
     border-top: none;
 }
 
-
-.directions {
-    height: 10vh;
-}
-
 .recipe-carousel {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+.recipe-carousel .error {
+    padding: 20px;
 }
 
 .recipe-card {
@@ -191,11 +189,24 @@ input[type="submit"] {
 
 .health-tags {
     justify-self: end;
-    background: rgb(157, 157, 255);
+    background: rgb(149, 243, 238);
     padding: 3px;
     margin: 3px 10px;
     border-radius: 5px;
     display: inline-block;
+}
+
+.cook-button {
+    font-size: 18px;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 3px;
+    background: rgb(149, 243, 238);
+    border: 1px solid rgb(149, 243, 238);
+}
+.cook-button:hover, .cook-button:active {
+    border: 1px solid rgb(18, 148, 141);
+    background: rgb(18, 148, 141);
 }
 
 /* videos */
@@ -237,3 +248,55 @@ input[type="submit"] {
 .video a img {
     width: 100%;
 }
+
+.start-over {
+    font-size: 20px;
+    padding: 10px;
+    margin: 20px;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+.start-over:hover, .start-over:active {
+    background: skyblue;
+    border: 1px solid skyblue;
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1200px) {
+    header {
+        width: 40%;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
+    .video h3 {
+        font-size: 
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (max-width: 992px) {
+    header {
+        width: 50%;
+    }
+    .video h3 {
+        font-size: 1.1em;
+    }
+} 
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 768px) {
+    header {
+        width: 60%;
+    }
+    .video {
+        width: 40%;
+    }
+} 
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px) {
+    header {
+        width: 90%;
+    }
+} 

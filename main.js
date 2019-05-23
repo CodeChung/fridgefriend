@@ -17,6 +17,7 @@ function addIngredient() {
         //     console.log("Refrigerator is FULL")
         // } else {
             const ingredient = $("#ingredient-input").val();
+            speakIngredient(ingredient);
             ingredientList.push(ingredient)
             $("#ingredient-input").val("");
             displayIngredients();
@@ -140,8 +141,8 @@ function recipeHtml(recipe, index) {
                     <h3>Ingredients</h3>
                     <ul class="ingredients-list" id="ingredients-list-${index}">
                     </ul>
-                    <button><a href="${recipe.link}" target="_blank">Recipe</a></button>
-                    <button class="find-videos">Watch & Learn</button>
+                    <button class="cook-button"><a class="get-recipe-page" href="${recipe.link}" target="_blank">Recipe</a></button>
+                    <button class="cook-button find-videos">Watch & Learn</button>
                 </div>
             </div>
         </div>
@@ -154,7 +155,7 @@ function displayRecipes(responseJson) {
     convertRecipeJson(responseJson);
     //should i split this up?
     if (recipeList.length === 0) {
-        $('.recipe-carousel').append("<h2>Uhoh spaghetti-o's no results found. Try a differnt combination or try less ingredients</h2>")
+        $('.recipe-carousel').append("<h2 class='error'>Uhoh spaghetti-o's no results found. Try a differnt combination or try less ingredients</h2>")
     }
     recipeList.forEach((recipe, index) => {
         $('.recipe-carousel').append(
@@ -244,8 +245,27 @@ function scrollToElement(element) {
     }, 2000);
 }
 
-function greeting() {
-    $('h1').click(event => $('audio').trigger('play'))
+function speak() {
+    $('h1').click(event => $('#welcome').trigger('play'))
+    $('.get-recipe-page').click(event => $('#recipe').trigger('play'));
+    $('.find-recipe').click(event => $('#get-recipes').trigger('play'))
+}
+
+function speakIngredient(ingredient) {
+    $('audio').each(function(){
+        this.pause();
+        this.currentTime = 0;
+    }); 
+    if (ingredient.includes("bread") || ingredient.includes("french") || ingredient.includes("croissant")) {
+        $('#croissant').trigger('play')
+    }
+    else if (ingredient.includes("rice") || ingredient.includes("chinese") || ingredient.includes("stir") || ingredient.includes("fry") || ingredient.includes("whip")) {
+        $("#kitchen").trigger("play")
+    } else if (ingredient.includes("fridge") || ingredient.includes("refridgerator")) {
+        $("#poem").trigger("play");
+    } else if (ingredient.includes("cold") || ingredient.includes("ice")) {
+        $("#cold").trigger("play");
+    }
 }
 
 function clearSections() {
@@ -257,8 +277,8 @@ function startOver() {
     $('.start-over').click(event => {
         event.preventDefault();
         clearSections();
-        $('.videos').addClass('hidden');
         scrollToElement('html');
+        $('.videos').addClass('hidden');
     })
 }
 
@@ -267,6 +287,6 @@ $(function startPage() {
     deleteIngredient();
     submitIngredients();
     revealVideoSection();
-    greeting();
+    speak();
     startOver();
 })

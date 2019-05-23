@@ -13,10 +13,6 @@
 <body>
     <header>
         <h1>FridgeFriend</h1>
-        <audio controls autoplay id="welcome" class="hidden">
-            <source src="src/audio/greeting.ogg" type="audio/ogg">
-            Your browser does not support the audio element.
-        </audio>
         <section class="ingredients">
             <form class="add-ingredient">
                 <input id="ingredient-input" type="text" placeholder="cheese" required>
@@ -31,7 +27,6 @@
         <button class="find-recipe">I'm Hungry</button>
     </header>
     <main>
-        <section class="directions"></section>
         <section class="recipes">
             <div class="error-message"></div>
             <div class="recipe-carousel"></div>
@@ -40,6 +35,36 @@
             <h2>Watch and Learn</h2>
             <div class="video-carousel"></div>
             <button class="start-over">New Search</button>
+        </section>
+        <section class="audio">
+            <audio controls autoplay id="welcome" class="hidden">
+                <source src="src/audio/greeting.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="recipe" class="hidden">
+                <source src="src/audio/recipe.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="get-recipes" class="hidden">
+                <source src="src/audio/recipes.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="croissant" class="hidden">
+                <source src="src/audio/croissant.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="kitchen" class="hidden">
+                <source src="src/audio/kitchen.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="poem" class="hidden">
+                <source src="src/audio/poem.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="cold" class="hidden">
+                <source src="src/audio/cold.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
         </section>
     </main>
     <script src="main.js"></script>
