@@ -2,6 +2,8 @@ body {
     font-family: "Lato";
 }
 
+button:focus {outline:0;}
+
 /* refrigerator */
 
 header {
@@ -129,7 +131,7 @@ input[type="submit"] {
 
 
 .directions {
-    float: right;
+    height: 10vh;
 }
 
 .recipe-carousel {
@@ -158,6 +160,7 @@ input[type="submit"] {
 }
 
 .recipe-ingredients a {
+    color: #000;
     text-decoration: none;
 }
 
@@ -201,16 +204,36 @@ input[type="submit"] {
     display: none;
 }
 
+.videos {
+    text-align: center;
+    overflow: auto;
+}
+
+.videos h2 {
+    font-size: 2rem;
+    padding: 30px 0 10px;
+}
+
 .video-carousel {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .video {
-    border: 1px solid black;
-    width: 480px;
+    width: 20%;
     margin: 10px;
+    box-sizing: border-box;
+}
+
+.video h3 {
+    text-align: left;
 }
 
 .video a {
+    width: 100%;
+}
+
+.video a img {
     width: 100%;
 }
