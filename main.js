@@ -58,7 +58,6 @@ function callEdamamApi() {
         app_id: edamamId,
         app_key: edamamApiKey,
         to: 10
-        // i could add features diet and health later
     }
     
     const edamamParams = paramsFormatted(queryParams)
@@ -153,7 +152,6 @@ function recipeHtml(recipe, index) {
 function displayRecipes(responseJson) {
     const ingredientListCopy = [...ingredientList];
     convertRecipeJson(responseJson);
-    //should i split this up?
     if (recipeList.length === 0) {
         $('.recipe-carousel').append("<h2 class='error'>Uhoh spaghetti-o's no results found. Try a differnt combination or try less ingredients</h2>")
     }

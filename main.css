@@ -101,13 +101,14 @@ input[type="submit"] {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-    width: 300px;
+    width: 100%;
     border-bottom: none;
+    display: flex;
+    justify-content: center;
 }
   
 .tab button {
     background-color: inherit;
-    float: left;
     border: none;
     outline: none;
     cursor: pointer;
@@ -191,7 +192,7 @@ input[type="submit"] {
 
 .health-tags {
     justify-self: end;
-    background: rgb(149, 243, 238);
+    background: rgb(149, 168, 243);
     padding: 3px;
     margin: 3px 10px;
     border-radius: 5px;
