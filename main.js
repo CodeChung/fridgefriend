@@ -265,6 +265,8 @@ function speakIngredient(ingredient) {
         $("#poem").trigger("play");
     } else if (ingredient.includes("cold") || ingredient.includes("ice")) {
         $("#cold").trigger("play");
+    } else if (ingredient.includes("beef") || ingredient.includes("meat") || ingredient.includes("chicken") || ingredient.includes("pork") || ingredient.includes("steak") || ingredient.includes("burger")) {
+        $("#beef").trigger("play");
     }
 }
 

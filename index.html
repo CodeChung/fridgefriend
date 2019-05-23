@@ -15,7 +15,7 @@
         <h1>FridgeFriend</h1>
         <section class="ingredients">
             <form class="add-ingredient">
-                <input id="ingredient-input" type="text" placeholder="cheese" required>
+                <input id="ingredient-input" type="text" placeholder="cheese" autocomplete="off" required>
                 <input type="submit" value="add">
             </form>
             <div class="lines">
@@ -63,6 +63,10 @@
             </audio>
             <audio controls id="cold" class="hidden">
                 <source src="src/audio/cold.ogg" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+            <audio controls id="beef" class="hidden">
+                <source src="src/audio/beef.ogg" type="audio/ogg">
                 Your browser does not support the audio element.
             </audio>
         </section>
