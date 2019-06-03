@@ -3,8 +3,6 @@
 let ingredientList = [];
 let recipeList = [];
 const edamamUrl = "https://api.edamam.com/search?";
-// const edamamId = "12b959ba";
-// const edamamApiKey = "0ff0b20b2cc4c31867eb4788a361d8d2";
 const edamamId = "e1a9af3e";
 const edamamApiKey = "893c9d58fe845be145348f72c95bd5d9";
 const youtubeUrl = "https://www.googleapis.com/youtube/v3/search?";
@@ -13,15 +11,11 @@ const youtubeApiKey = "AIzaSyCGR7I6ui7MVs7YuSXq7bDvxK3IJAZ6qtA";
 function addIngredient() {
     $('form.add-ingredient').submit(event => {
         event.preventDefault();
-        // if ($('.ingredient-list li').length > 10) {
-        //     console.log("Refrigerator is FULL")
-        // } else {
-            const ingredient = $("#ingredient-input").val();
-            speakIngredient(ingredient);
-            ingredientList.push(ingredient)
-            $("#ingredient-input").val("");
-            displayIngredients();
-        // }
+        const ingredient = $("#ingredient-input").val();
+        speakIngredient(ingredient);
+        ingredientList.push(ingredient)
+        $("#ingredient-input").val("");
+        displayIngredients();
     })
 }
 
@@ -219,7 +213,6 @@ function callYoutubeApi(recipeName) {
     const recipeQuery = recipeFormatted(recipeName);
     const youtubeParams = `part=snippet&maxResults=8&q=${recipeQuery}&key=${youtubeApiKey}`;
     const searchUrl = youtubeUrl + youtubeParams;
-    console.log(searchUrl);
     fetch(searchUrl)
         .then(response => response.json())
         .then(responseJson => displayVideos(responseJson))
@@ -228,9 +221,7 @@ function callYoutubeApi(recipeName) {
 
 function revealVideoSection() {
     $('.recipe-carousel').on('click', '.find-videos', event => {
-        console.log(event.target)
         const recipeName = ($(event.target).parent().siblings("h2").text() + " recipe");
-        console.log(recipeName);
         callYoutubeApi(recipeName);
         $('.videos').removeClass('hidden');
         scrollToElement('.videos');
