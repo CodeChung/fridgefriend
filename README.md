@@ -12,7 +12,7 @@ Find recipes based on ingredients you have in your refrigerator. Learn more abou
 
 ## Step 3: Watch videos on how to make the recipe
 
-<img src='src/img/videos.jpg>
+<img src='src/img/videos.jpg'>
 
 ## Technologies used:
 
