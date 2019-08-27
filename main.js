@@ -6,7 +6,7 @@ const edamamUrl = "https://api.edamam.com/search?";
 const edamamId = "e1a9af3e";
 const edamamApiKey = "893c9d58fe845be145348f72c95bd5d9";
 const youtubeUrl = "https://www.googleapis.com/youtube/v3/search?";
-const youtubeApiKey = "AIzaSyCGR7I6ui7MVs7YuSXq7bDvxK3IJAZ6qtA";
+const youtubeApiKey = "AIzaSyBRyVueU2qhh1_QcBjytlrufNdwWUrhzNY";
 
 function addIngredient() {
     $('form.add-ingredient').submit(event => {
